@@ -15,8 +15,8 @@ subordinate: true
   # provides-relation:
   #   interface: interface-name
 requires:
-  logging-directory:
-    interface: logging
+  juju-info:
+    interface: juju-info
     scope: container
   # requires-relation:
   #   interface: interface-name

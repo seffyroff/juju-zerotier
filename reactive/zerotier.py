@@ -7,8 +7,8 @@ def install_zerotier():
     status_set('maintenance', 'Installing Zerotier Client')
     
     cmd_install = \
-        ('curl -s 'https://raw.githubusercontent.com/zerotier/download.zerotier.com/master/htdocs/contact%40zerotier.com.gpg'
-            '| gpg --import && if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi)'.format()
+        ('curl -s "https://raw.githubusercontent.com/zerotier/download.zerotier.com/master/htdocs/contact%40zerotier.com.gpg"'
+            '| gpg --import && if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi'.format())
     call(cmd_install.split())
     set_flag('zerotier.installed')
 
