@@ -4,6 +4,8 @@ summary: Zerotier-CLI Subordinate Charm
 maintainer: Phil Merricks <Seffyroff@gmail.com>
 description: |
   Zerotier-cli is a client to connect to a Zerotier Network.  It's useful for connecting securely across clouds.
+series:
+  - bionic
 tags:
   - network
   - ops
