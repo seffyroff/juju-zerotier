@@ -1,0 +1,23 @@
+name: zerotier
+display-name: Zerotier-CLI
+summary: Zerotier-CLI Subordinate Charm
+maintainer: Phil Merricks <Seffyroff@gmail.com>
+description: |
+  Zerotier-cli is a client to connect to a Zerotier Network.  It's useful for connecting securely across clouds.
+tags:
+  - network
+  - ops
+  - security
+subordinate: true
+# provides:
+  # provides-relation:
+  #   interface: interface-name
+requires:
+  logging-directory:
+    interface: logging
+    scope: container
+  # requires-relation:
+  #   interface: interface-name
+# peers:
+  # peer-relation:
+  #   interface: interface-name
