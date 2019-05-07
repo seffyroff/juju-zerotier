@@ -1,30 +1,34 @@
 from charms.reactive import when, when_not, set_flag, when_all
 from charmhelpers.core.hookenv import status_set, config
-from subprocess import call
+import subprocess
 
+# zerotier_network_id = config('zerotier-network-id')
 
 @when_not('zerotier.installed')
 def install_zerotier():
     status_set('maintenance', 'Installing Zerotier Client')
 
-    # cmd_install = ('curl -s https://install.zerotier.com/ | sudo bash')
+    install_ctxt = {'install_url': ("https://install.zerotier.com/"),
+                    'install_exec': ('sudo bash')}
+    cmd_install = ('curl', '-s', '{install_url}', '|', '{install_exec}'.format(**install_ctxt))
 
-    cmd_install = ('curl -s \'https://raw.githubusercontent.com/zerotier/download.zerotier.com/master/htdocs/contact%40zerotier.com.gpg\' '
-                   '| gpg --import && if z=$(curl -s \'https://install.zerotier.com/\' | gpg); then echo \"$z\" | sudo bash; fi')
+    # cmd_install = ('curl -s \'https://raw.githubusercontent.com/zerotier/download.zerotier.com/master/htdocs/contact%40zerotier.com.gpg\' '
+    #                '| gpg --import && if z=$(curl -s \'https://install.zerotier.com/\' | gpg); then echo \"$z\" | sudo bash; fi')
 
-    call(cmd_install)
+    subprocess.check_call(cmd_install, shell=True)
 
     set_flag('zerotier.installed')
 
-@when('zerotier.installed')
+@when_all('zerotier.installed', 'zerotier-network-id')
 @when_not ('zerotier.network.joined')
 def zt_join_network():
+
     status_set('maintenance', 'Joining Network {}'.format(config('zerotier-network-id')))
 
     zt_join_ctxt = {'zerotier_network_id': config('zerotier-network-id')}
 
-    cmd_zt_join_network = ('zerotier-cli join {}'.format(**zt_join_ctxt))
-    call(cmd_zt_join_network.split())
+    cmd_zt_join_network = ('zerotier-cli', 'join', '{}'.format(**zt_join_ctxt))
+    subprocess.check_call(cmd_zt_join_network, shell=True)
     set_flag('zerotier.network.joined')
 
 @when_all('zerotier.installed', 'zerotier.network.joined')
