@@ -3,12 +3,5 @@ options:
     type: string
     default: ""
     description: "The network ID of your zerotier network"
-  # boolean-option:
-  #   type: boolean
-  #   default: False
-  #   description: "A short description of the configuration option"
-  # int-option:
-  #   type: int
-  #   default: 9001
-  #   description: "A short description of the configuration option"
+
 

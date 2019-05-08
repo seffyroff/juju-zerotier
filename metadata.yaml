@@ -1,7 +1,7 @@
 name: zerotier
 display-name: Zerotier-CLI
 summary: Zerotier-CLI Subordinate Charm
-maintainer: Phil Merricks <Seffyroff@gmail.com>
+maintainer: Phil Merricks <seffyroff@gmail.com>
 description: |
   Zerotier-cli is a client to connect to a Zerotier Network.  It's useful for connecting securely across clouds.
 series:
@@ -11,15 +11,9 @@ tags:
   - ops
   - security
 subordinate: true
-# provides:
-  # provides-relation:
-  #   interface: interface-name
+
 requires:
   juju-info:
     interface: juju-info
     scope: container
-  # requires-relation:
-  #   interface: interface-name
-# peers:
-  # peer-relation:
-  #   interface: interface-name
+
