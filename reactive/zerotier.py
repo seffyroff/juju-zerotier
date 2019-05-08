@@ -10,16 +10,20 @@ def install_zerotier():
 
     install_ctxt = {'install_url': ("https://install.zerotier.com/"),
                     'install_exec': ('sudo bash')}
-    cmd_install = ('curl', '-s', '{install_url}', '|', '{install_exec}'.format(**install_ctxt))
+    cmd_install = ('curl -s {install_url} | {install_exec}'.format(**install_ctxt))
 
-    # cmd_install = ('curl -s \'https://raw.githubusercontent.com/zerotier/download.zerotier.com/master/htdocs/contact%40zerotier.com.gpg\' '
-    #                '| gpg --import && if z=$(curl -s \'https://install.zerotier.com/\' | gpg); then echo \"$z\" | sudo bash; fi')
+#TODO Switch to secure installer
+#TODO output network id to status when connected to network
+    # cmd_install = ('curl -s 'https://raw.githubusercontent.com/zerotier/download.zerotier.com/master/htdocs/contact%40zerotier.com.gpg' '
+    #                 '| gpg --import && if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi')
 
     subprocess.check_call(cmd_install, shell=True)
 
     set_flag('zerotier.installed')
-
-@when_all('zerotier.installed', 'zerotier-network-id')
+    status_set('maintenance', 'Zerotier installed, ZT address ')
+    
+# @when_all('zerotier.installed', 'zerotier-network-id')
+@when('zerotier.installed')
 @when_not ('zerotier.network.joined')
 def zt_join_network():
 
@@ -27,7 +31,7 @@ def zt_join_network():
 
     zt_join_ctxt = {'zerotier_network_id': config('zerotier-network-id')}
 
-    cmd_zt_join_network = ('zerotier-cli', 'join', '{}'.format(**zt_join_ctxt))
+    cmd_zt_join_network = ('zerotier-cli join {zerotier_network_id}'.format(**zt_join_ctxt))
     subprocess.check_call(cmd_zt_join_network, shell=True)
     set_flag('zerotier.network.joined')
 
