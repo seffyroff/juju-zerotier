@@ -12,14 +12,14 @@ def install_zerotier():
                     'install_exec': ("gpg --import && if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo \"$z\" | sudo bash; fi")}
     cmd_install = ('curl -s {install_url} | {install_exec}'.format(**install_ctxt))
 
-#TODO output network id to status when connected to network
 
     subprocess.check_call(cmd_install, shell=True)
 
     set_flag('zerotier.installed')
-    zt_address = subprocess.check_output('zerotier-cli -j info')
-    
-    status_set('maintenance', 'Zerotier installed, ZT address ')
+    zt_address_output = subprocess.check_output('zerotier-cli -j info', shell=True)
+    zt_address_json = json.loads(zt_address_output)
+    zt_address_ref = zt_address_json['address']
+    status_set('maintenance', 'Zerotier installed, ZT address {}'.format(zt_address_json['address']))
     application_version_set(get_upstream_version('zerotier-one'))
 
 @when('zerotier.installed')
@@ -33,7 +33,10 @@ def zt_join_network():
     cmd_zt_join_network = ('zerotier-cli join {zerotier_network_id}'.format(**zt_join_ctxt))
     subprocess.check_call(cmd_zt_join_network, shell=True)
     set_flag('zerotier.network.joined')
-
+    status_set('maintenance', 'Connected to network {}'.format(config('zerotier-network-id')))
 @when_all('zerotier.installed', 'zerotier.network.joined')
 def set_status_active():
-    status_set('active', 'Connected to network {}'.format(config('zerotier-network-id')))
+    zt_address_output = subprocess.check_output('zerotier-cli -j info', shell=True)
+    zt_address_json = json.loads(zt_address_output)
+    zt_address_ref = zt_address_json['address']
+    status_set('active', '{} connected to network'.format(zt_address_json['address']))
