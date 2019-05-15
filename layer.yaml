@@ -1,3 +1,6 @@
 includes:
   - layer:basic
 repo: https://github.com/seffyroff/juju-zerotier
+exclude:
+  - build.sh
+  - .gitignore
